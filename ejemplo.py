@@ -31,12 +31,12 @@ def calcularVecindad(punto, P):
         distance = ( (punto[0] - point[0]) ** 2 + (punto[1] - point[1]) ** 2) **0.5 
         if distance < max_distance:
             nnearest = nnearest + 1
-            print "distancia = " + str(distance) + " x = " + str(point[0]) + " y = " + str(point[1]) + " value = " + str(point[2])
+            #print "distancia = " + str(distance) + " x = " + str(point[0]) + " y = " + str(point[1]) + " value = " + str(point[2])
     return nnearest
 
 def calculaKriging(punto, P, N, d):
-    print N
-    print punto
+    #print N
+    #print punto
     x = punto[0]
     y = punto[1]
     #tolerance = 250
@@ -51,8 +51,8 @@ def calculaKriging(punto, P, N, d):
     kriging.ordinary( P, covfct, punto, N )
 
     est, kstd = kriging.krige( P, covfct, [[x,y],[x+d,y],[x,y+d],[x+d,y+d]], 'ordinary', N )
-    print est
-    print kstd
+    #print est
+    #print kstd
     return est
 
 nrow = 10
@@ -68,27 +68,34 @@ for point in P:
     miny = point[1] if miny > point[1] else miny
     maxx = point[0] if maxx < point[0] else maxx
     maxy = point[1] if maxy < point[1] else maxy
-print "minx = " + str(minx) + " miny = " + str(miny) + " maxx = " + str(maxx) + " maxy = " + str(maxy)
+#print "minx = " + str(minx) + " miny = " + str(miny) + " maxx = " + str(maxx) + " maxy = " + str(maxy)
 
 points = getPoints(nrow, ncol, maxx + miny, maxy + miny)
 
-print "POINTS"
-for point in points:
-    print point
+#print "POINTS"
+#for point in points:
+#    print point
 
 
 
 
 counter = 0
 for point in points:
-    counter = counter + 1
-    print "Punto numero: " + str(counter)
-    print point
+    #counter = counter + 1
+    #print "Punto numero: " + str(counter)
+    #print point
     N = calcularVecindad([point["x"], point["y"]], P)
     if N <= 2: 
         N = 3
     #point["valor"] = calculaKriging([point.x, point.y], P, N, d)
-    calculaKriging([point["x"], point["y"]], P, N, 100)
+    if counter == nrow + 1:
+        counter = 0
+        print ""
+    val = calculaKriging([point["x"], point["y"]], P, N, 100)[0][0]
+    val = val if val > 0 else 0.0
+    print val,
+    counter = counter + 1
+
 
 
 #print points
